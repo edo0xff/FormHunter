@@ -1,6 +1,6 @@
 # Cpp Http Interceptor
 
-Small C++ Plain HTTP interceptor written in C++17.
+Small C++ command line tool for HTTP Post (Web forms, like login forms) interception written in C++17. This tool by itself only sniffs your own machine network traffic but you can perform an arpspoof attack (using another tools) to intercept and look for HTTP Posts in all the local network traffic.
 
 ## Dependencies
 
@@ -74,30 +74,36 @@ If the build was successful, you should find an executable file named `chi` or `
 
 ```shell
 # General program syntax:
-$ chi <-i INTERFACE_TO_INTERCEPT> [-o PATH_TO_OUTPUT_FILE] <-l TIME_IN_SECONDS>
+$ cfhunter <-i INTERFACE_TO_INTERCEPT> [-o PATH_TO_OUTPUT_FILE] <-t TIME_IN_SECONDS>
 
 # For example, intercept the interface "en0" for 10 seconds and save the result to a file called output.txt
-$ chi -i en0 -o output.txt -l 10
+$ cfhunter -i en0 -o output.txt -t 10
 
 # For more information, you can run the program with the --help argument:
-$ ./chi_mac_arm64.o --help
+$ cfhunter --help
 
 USAGE:
 
-   ./chi_mac_arm64.o  [-o <string>] -l <non-negative integer> -i <string>
-                      [--] [--version] [-h]
+   cfhunter  [-f <string>] [-o <string>] [-t <non-negative integer>] [-i
+             <string>] [-l] [--] [--version] [-h]
 
 
 Where:
 
+   -f <string>,  --filters <string>
+     form inputs that will be filtered (comma separated)
+
    -o <string>,  --output <string>
      output filepath where results will be written
 
-   -l <non-negative integer>,  --lapse <non-negative integer>
-     (required)  duration in seconds interception will last
+   -t <non-negative integer>,  --time-lapse <non-negative integer>
+     duration in seconds interception will last
 
    -i <string>,  --interface <string>
-     (required)  network interface to intercept
+     network interface to intercept
+
+   -l,  --list-ifaces
+     show available network ifaces
 
    --,  --ignore_rest
      Ignores the rest of the labeled arguments following this flag.
@@ -109,12 +115,12 @@ Where:
      Displays usage information and exits.
 
 
-   small C++ command line tool for HTTP interception
+   Small C++ command line tool for HTTP POST interception
 ```
 
 ## Known Limitations
 
-1. This program **does not support** `HTTPs` packets capture although its support should be easy to implement.
+1. This program **does not support** `HTTPs` packets capture although its support should be easy to implement (perfoming an SSLStrip attack).
 2. If you are on a Windows platform, it is recommended to generate CMake files using Visual Studio rather than other generators.
 3. For most of users, this program should be running as privileged user (`root` for friends).
 

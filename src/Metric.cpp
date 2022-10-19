@@ -18,6 +18,30 @@ Metric::~Metric()
 {
 }
 
+void Metric::setHttpFlag(bool value)
+{
+    http_flag = value;
+}
+
+void Metric::setFormInputFilters(std::vector<std::string> p_formInputFilters)
+{
+    formInputFilters = p_formInputFilters;
+}
+
+bool Metric::formInputMatchesFilters(std::string formInputString)
+{
+    if (formInputFilters.empty())
+        return true;
+
+    for (std::string &filter : formInputFilters)
+    {
+        if (formInputString.find(filter) != std::string::npos)  
+            return true;
+    }
+
+    return false;
+}
+
 void Metric::consume(pcpp::Packet &pkt)
 {
     pcpp::HttpRequestLayer *httpReqLayer = pkt.getLayerOfType<pcpp::HttpRequestLayer>();
@@ -33,6 +57,8 @@ void Metric::consume(pcpp::Packet &pkt)
 
 void Metric::writeToFile(const std::string &path) const
 {
+    spdlog::info("saving metrics");
+
     std::ofstream file(path);
 
     file << "Total HTTP intercepted requests: " << totalHttpRequests << std::endl;
